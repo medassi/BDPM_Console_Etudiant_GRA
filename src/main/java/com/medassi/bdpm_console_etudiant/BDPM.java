@@ -107,11 +107,11 @@ public class BDPM {
 
     Medicament getMedicamentByCodeCIS(String code) {
         ResultSet rs;
-        Medicament m = null ;
+        Medicament m = null;
         try {
-            rs = statement.executeQuery("Select * from medicaments where code_cis='"+code+"'");
-            if( rs.next() ){
-                m = new Medicament() ;
+            rs = statement.executeQuery("Select * from medicaments where code_cis='" + code + "'");
+            if (rs.next()) {
+                m = new Medicament();
                 m.code_cis = rs.getString("code_cis");
                 m.denomination = rs.getString("denomination");
                 m.forme = rs.getString("forme");
@@ -128,6 +128,33 @@ public class BDPM {
         } catch (SQLException ex) {
             System.getLogger(BDPM.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        return m ;        
+        return m;
+    }
+
+    public ArrayList<Medicament> getMedicamentsByLabo(String unLaboratoire) {
+        ArrayList<Medicament> lesMedocs = new ArrayList<>();
+        String sql = "Select * from medicaments where titulaires like '%" + unLaboratoire + "%'";
+        try {
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                Medicament unMedoc = new Medicament();
+                unMedoc.code_cis = rs.getString("code_cis");
+                unMedoc.denomination = rs.getString("denomination");
+                unMedoc.forme = rs.getString("forme");
+                unMedoc.voies_admin = rs.getString("voies_admin");
+                unMedoc.statut_admin_amm = rs.getString("statut_admin_amm");
+                unMedoc.type_auth_amm = rs.getString("type_auth_amm");
+                unMedoc.etat_comm = rs.getString("etat_comm");
+                unMedoc.date_amm = rs.getString("date_amm");
+                unMedoc.statut_bdm = rs.getString("statut_bdm");
+                unMedoc.numero_auth = rs.getString("numero_auth");
+                unMedoc.titulaires = rs.getString("titulaires");
+                unMedoc.surveillance_renforcee = rs.getString("surveillance_renforcee");
+                lesMedocs.add(unMedoc);
+            }
+        } catch (SQLException ex) {
+            System.getLogger(BDPM.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        return lesMedocs;
     }
 }

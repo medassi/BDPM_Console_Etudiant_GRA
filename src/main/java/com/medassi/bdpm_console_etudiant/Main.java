@@ -77,9 +77,29 @@ public class Main {
         afficherFiche(m);
     }
     
+    //Demande à l’utilisateur d’entrer le nom du laboratoire à rechercher
+    //puis va rechercher sur la base de données les médicaments 
+    //qui correspondent à ce laboratoire. 
+    //Permet ensuite à l’utilisateur la sélection du médicament
+    //et affiche sa fiche.
+    private static void choixRechercheLabo(){
+        String labo = saisirString("Entrer le laboratoire à rechercher") ;
+        ArrayList<Medicament> lesMedocs = BDPM.getDatabase().getMedicamentsByLabo(labo) ;
+        int cpt=1 ;
+        for( Medicament unMedoc : lesMedocs ){
+            System.out.println(cpt+" -> "+unMedoc.denomination);
+            cpt++ ;
+        }
+        int num = saisirInt("Entrer le numéro du médicament :") ;
+        afficherFiche(lesMedocs.get(num-1));
+    }
+
+
+    
     public static void main(String[] args) {
         //choixRechercheMotCle();
-        choixRechercheCodeCis();
+        //choixRechercheCodeCis();
+        choixRechercheLabo();
     }
     
 }
