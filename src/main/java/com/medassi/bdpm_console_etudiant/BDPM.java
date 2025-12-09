@@ -60,16 +60,16 @@ public class BDPM {
     }
 
     public ArrayList<Composant> getCompositions(Medicament m) {
-        String sql ="SELECT * FROM compositions  where code_cis='"+ m.code_cis+"'"; 
+        String sql = "SELECT * FROM compositions  where code_cis='" + m.code_cis + "'";
         ArrayList<Composant> cs = new ArrayList<>();
         try {
             ResultSet rs;
             rs = statement.executeQuery(sql);
             while (rs.next()) {
                 Composant c = new Composant();
-                c.denomination_sub = rs.getString("denomination_sub") ;
-                c.designation = rs.getString("designation") ;
-                c.dosage = rs.getString("dosage") ;
+                c.denomination_sub = rs.getString("denomination_sub");
+                c.designation = rs.getString("designation");
+                c.dosage = rs.getString("dosage");
                 cs.add(c);
             }
         } catch (SQLException ex) {
@@ -77,12 +77,12 @@ public class BDPM {
         }
         return cs;
     }
-    
-      public ArrayList<Medicament> getMedicamentsByMotClef(String mot) {
+
+    public ArrayList<Medicament> getMedicamentsByMotClef(String mot) {
         ArrayList<Medicament> ms = new ArrayList<>();
         try {
             ResultSet rs;
-            rs = statement.executeQuery("Select * from medicaments where denomination like ('%"+mot+"%')");
+            rs = statement.executeQuery("Select * from medicaments where denomination like ('%" + mot + "%')");
             while (rs.next()) {
                 Medicament m = new Medicament();
                 m.code_cis = rs.getString("code_cis");
@@ -103,5 +103,31 @@ public class BDPM {
             Logger.getLogger(BDPM.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ms;
+    }
+
+    Medicament getMedicamentByCodeCIS(String code) {
+        ResultSet rs;
+        Medicament m = null ;
+        try {
+            rs = statement.executeQuery("Select * from medicaments where code_cis='"+code+"'");
+            if( rs.next() ){
+                m = new Medicament() ;
+                m.code_cis = rs.getString("code_cis");
+                m.denomination = rs.getString("denomination");
+                m.forme = rs.getString("forme");
+                m.voies_admin = rs.getString("voies_admin");
+                m.statut_admin_amm = rs.getString("statut_admin_amm");
+                m.type_auth_amm = rs.getString("type_auth_amm");
+                m.etat_comm = rs.getString("etat_comm");
+                m.date_amm = rs.getString("date_amm");
+                m.statut_bdm = rs.getString("statut_bdm");
+                m.numero_auth = rs.getString("numero_auth");
+                m.titulaires = rs.getString("titulaires");
+                m.surveillance_renforcee = rs.getString("surveillance_renforcee");
+            }
+        } catch (SQLException ex) {
+            System.getLogger(BDPM.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        return m ;        
     }
 }

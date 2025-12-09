@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
+    
     private static void afficherMedicamentsASurveiller() {
         System.out.println("Médicaments à surveiller :");
         ArrayList<Medicament> lesMedicamentsSurvRenf = BDPM.getDatabase().getMedicamentsSurvRenf();
@@ -45,32 +45,41 @@ public class Main {
         System.out.println(m.denomination + " (" + m.code_cis + ")");
         ArrayList<Composant> lesComposantsDeM = BDPM.getDatabase().getCompositions(m);
         for (Composant c : lesComposantsDeM) {
-            System.out.println("\t- " + c.denomination_sub + " ("+c.dosage+")");
+            System.out.println("\t- " + c.denomination_sub + " (" + c.dosage + ")");
         }
     }
-    
+
     /*
     Demande à l’utilisateur d’entrer le mot clé à rechercher 
     puis va rechercher sur la base de données tous les médicaments qui correspondent. 
     Permet ensuite à l’utilisateur la sélection du médicament et affiche sa fiche.
-    */
+     */
     private static void choixRechercheMotCle() {
-        String motClef = saisirString("Entrer le mot clef") ;
-        ArrayList<Medicament> ms = BDPM.getDatabase().getMedicamentsByMotClef(motClef) ;
-        int cpt = 1 ;
-        for( Medicament m : ms){
+        String motClef = saisirString("Entrer le mot clef");
+        ArrayList<Medicament> ms = BDPM.getDatabase().getMedicamentsByMotClef(motClef);
+        int cpt = 1;
+        for (Medicament m : ms) {
             System.out.println(cpt + " -> " + m.denomination);
-            cpt = cpt + 1 ; //cpt++
+            cpt = cpt + 1; //cpt++
         }
-        int choixMedicament = saisirInt("Entrer le numéro du médicament :") ;
-        Medicament medicamentSel = ms.get(choixMedicament-1) ;
+        int choixMedicament = saisirInt("Entrer le numéro du médicament :");
+        Medicament medicamentSel = ms.get(choixMedicament - 1);
         afficherFiche(medicamentSel);
     }
 
-
-
-    public static void main(String[] args) {
-       choixRechercheMotCle();
+    // Demande à l’utilisateur d’entrer le code CIS à rechercher 
+    // puis va rechercher sur la base de données 
+    // le médicament qui correspond à ce code CIS. 
+    // Affiche ensuite sa fiche.
+    private static void choixRechercheCodeCis() {
+        String code = saisirString("Entrer le code CIS :");
+        Medicament m = BDPM.getDatabase().getMedicamentByCodeCIS(code);
+        afficherFiche(m);
     }
-
+    
+    public static void main(String[] args) {
+        //choixRechercheMotCle();
+        choixRechercheCodeCis();
+    }
+    
 }
