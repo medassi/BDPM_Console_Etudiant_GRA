@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    
+
     private static void afficherMedicamentsASurveiller() {
         System.out.println("Médicaments à surveiller :");
         ArrayList<Medicament> lesMedicamentsSurvRenf = BDPM.getDatabase().getMedicamentsSurvRenf();
@@ -62,9 +62,13 @@ public class Main {
             System.out.println(cpt + " -> " + m.denomination);
             cpt = cpt + 1; //cpt++
         }
-        int choixMedicament = saisirInt("Entrer le numéro du médicament :");
-        Medicament medicamentSel = ms.get(choixMedicament - 1);
-        afficherFiche(medicamentSel);
+        if (!ms.isEmpty()) {
+            int choixMedicament = saisirInt("Entrer le numéro du médicament :");
+            Medicament medicamentSel = ms.get(choixMedicament - 1);
+            afficherFiche(medicamentSel);
+        } else {
+            System.out.println("Aucun médicament trouvé");
+        }
     }
 
     // Demande à l’utilisateur d’entrer le code CIS à rechercher 
@@ -74,32 +78,62 @@ public class Main {
     private static void choixRechercheCodeCis() {
         String code = saisirString("Entrer le code CIS :");
         Medicament m = BDPM.getDatabase().getMedicamentByCodeCIS(code);
-        afficherFiche(m);
+        if (m != null) {
+            afficherFiche(m);
+        } else {
+            System.out.println("Aucun médicament avec le code : " + code);
+        }
     }
-    
+
     //Demande à l’utilisateur d’entrer le nom du laboratoire à rechercher
     //puis va rechercher sur la base de données les médicaments 
     //qui correspondent à ce laboratoire. 
     //Permet ensuite à l’utilisateur la sélection du médicament
     //et affiche sa fiche.
-    private static void choixRechercheLabo(){
-        String labo = saisirString("Entrer le laboratoire à rechercher") ;
-        ArrayList<Medicament> lesMedocs = BDPM.getDatabase().getMedicamentsByLabo(labo) ;
-        int cpt=1 ;
-        for( Medicament unMedoc : lesMedocs ){
-            System.out.println(cpt+" -> "+unMedoc.denomination);
-            cpt++ ;
+    private static void choixRechercheLabo() {
+        String labo = saisirString("Entrer le laboratoire à rechercher");
+        ArrayList<Medicament> lesMedocs = BDPM.getDatabase().getMedicamentsByLabo(labo);
+        int cpt = 1;
+        for (Medicament unMedoc : lesMedocs) {
+            System.out.println(cpt + " -> " + unMedoc.denomination);
+            cpt++;
         }
-        int num = saisirInt("Entrer le numéro du médicament :") ;
-        afficherFiche(lesMedocs.get(num-1));
+        if (!lesMedocs.isEmpty()) {
+            int choixMedicament = saisirInt("Entrer le numéro du médicament :");
+            Medicament medicamentSel = lesMedocs.get(choixMedicament - 1);
+            afficherFiche(medicamentSel);
+        } else {
+            System.out.println("Aucun médicament trouvé");
+        }
     }
 
-
-    
     public static void main(String[] args) {
-        //choixRechercheMotCle();
-        //choixRechercheCodeCis();
-        choixRechercheLabo();
+        int choix = -1;
+        while (choix != 0) {
+            choix = saisirInt("Que voulez-vous faire ?\n"
+                    + "1 - Rechercher un médicament par mot clé\n"
+                    + "2 - Rechercher un médicament par code CIS\n"
+                    + "3 - Rechercher un médicament par laboratoire\n"
+                    + "0 - Quitter l'application\n"
+                    + "Entrer votre choix :");
+            switch (choix) {
+                case 1:
+                    choixRechercheMotCle();
+                    break;
+                case 2:
+                    choixRechercheCodeCis();
+                    break;
+                case 3:
+                    choixRechercheLabo();
+                    break;
+                case 0:
+                    System.out.println("Bye bye");
+                    break;
+                default:
+                    System.out.println("Mauvais choix");
+            }
+        }
+
     }
-    
+
 }
